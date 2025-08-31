@@ -1,0 +1,129 @@
+/*
+ * Apache License, Version 2.0
+ *
+ * Copyright (c) 2025 Infinite KemonoYagi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at:
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import hxp.*;
+import lime.tools.*;
+
+@:notNull
+@:nullSafety
+class Project extends HXProject
+{
+    // --- GAME VARIABLES --- //
+
+    static final SWF_VER:Float = 11.8;
+    static final MAIN:String = "Main";
+    static final PRELOADER:String = "flixel.system.FlxPreloader";
+
+    static final TITLE:String = "Infinite Funkin' Engine | Friday Night Funkin'";
+    static final FILE:String = "Funkin";
+
+    static final VERSION:String = "0.1.0";
+
+    static final PACKAGE_NAME:String = "com.infigames.goats";
+    static final COMPANY:String = "Infinite KemonoYagi Games";
+
+    static final OUTPUT:String = "builds/release";
+    static final OUTPUT_DEBUG:String = "builds/debug";
+
+    // --- WINDOW VARIABLES --- //
+
+    static final WIDTH:Int = 1280;
+    static final HEIGHT:Int = 720;
+
+    static final FRAMERATE:Int = 60;
+
+    static final HARDWARE:Bool = true;
+    static final VSYNC:Bool = true;
+
+    static final ANTIALIASING:Int = 1;
+
+    public function new()
+    {
+        super();
+
+        setLibs(); setDefs();
+
+        includeAssets("assets");
+        if (target == LINUX || target == MAC)
+            includeAssets("./documents/files/icons/", "assets/images/icon/", ["iconOG.png"]);
+        sources.push("source");
+
+        meta = {
+            title: TITLE,
+            company: COMPANY,
+            packageName: PACKAGE_NAME,
+            version: VERSION
+        };
+        app = {
+            main: MAIN,
+            file: FILE,
+            path: OUTPUT,
+            preloader: PRELOADER,
+            swfVersion: SWF_VER
+        };
+        if (debug) app.path = OUTPUT_DEBUG;
+
+        window.width = WIDTH;
+        window.height = HEIGHT;
+        window.fps = FRAMERATE;
+        window.hardware = HARDWARE;
+        window.vsync = VSYNC;
+        window.antialiasing = ANTIALIASING;
+    }
+
+    private function setLibs():Void
+    {
+        // haxelibs.push(new Haxelib("hxcpp-debug-server"));
+        haxelibs.push(new Haxelib("hxcpp"));
+
+        haxelibs.push(new Haxelib("flixel"));
+
+        haxelibs.push(new Haxelib("hxdiscord_rpc"));
+        haxelibs.push(new Haxelib("hscript"));
+        haxelibs.push(new Haxelib("hxopus"));
+        if (platformType == DESKTOP)
+            haxelibs.push(new Haxelib("hxvlc"));
+    }
+
+    private function setDefs():Void
+    {
+        haxedefs.set("FLX_NO_HEALTH", "");
+
+        if (platformType == MOBILE)
+        {
+            haxedefs.set("FLX_NO_MOUSE", "");
+            haxedefs.set("FLX_NO_KEYBOARD", "");
+        }
+        if (platformType == DESKTOP)
+            haxedefs.set("FLX_NO_TOUCH", "");
+
+        haxedefs.set("FLX_NO_FOCUS_LOST_SCREEN", "");
+
+        if (!debug)
+        {
+            haxedefs.set("FLX_NO_DEBUG", "");
+            haxedefs.set("NAPE_RELEASE_BUILD", "");
+        }
+
+        haxedefs.set("message.reporting", "pretty");
+
+        // --- Infinite Funkin' Engine's customs defs. --- //
+
+        haxedefs.set("infinite.cache", "");
+
+        haxedefs.set("initial.state", "MainMenu");
+    }
+}

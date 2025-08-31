@@ -1,0 +1,8 @@
+# misc stuff
+*.DS_Store
+.vscode/
+.haxelib/
+
+# export dirs
+builds/
+export/
