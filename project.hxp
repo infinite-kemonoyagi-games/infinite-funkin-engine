@@ -32,7 +32,7 @@ class Project extends HXProject
 
     static final VERSION:String = "0.1.0";
 
-    static final PACKAGE_NAME:String = "com.infigames.goats";
+    static final PACKAGE_NAME:String = "com.infigames.funkin";
     static final COMPANY:String = "Infinite KemonoYagi Games";
 
     static final OUTPUT:String = "builds/release";
