@@ -86,7 +86,6 @@ class Project extends HXProject
 
     private function setLibs():Void
     {
-        // haxelibs.push(new Haxelib("hxcpp-debug-server"));
         haxelibs.push(new Haxelib("hxcpp"));
 
         haxelibs.push(new Haxelib("flixel"));
@@ -94,8 +93,11 @@ class Project extends HXProject
         haxelibs.push(new Haxelib("hxdiscord_rpc"));
         haxelibs.push(new Haxelib("hscript"));
         haxelibs.push(new Haxelib("hxopus"));
+
         if (platformType == DESKTOP)
+        {
             haxelibs.push(new Haxelib("hxvlc"));
+        }
     }
 
     private function setDefs():Void
@@ -107,7 +109,7 @@ class Project extends HXProject
             haxedefs.set("FLX_NO_MOUSE", "");
             haxedefs.set("FLX_NO_KEYBOARD", "");
         }
-        if (platformType == DESKTOP)
+        else if (platformType == DESKTOP)
             haxedefs.set("FLX_NO_TOUCH", "");
 
         haxedefs.set("FLX_NO_FOCUS_LOST_SCREEN", "");
@@ -123,7 +125,6 @@ class Project extends HXProject
         // --- Infinite Funkin' Engine's customs defs. --- //
 
         haxedefs.set("infinite.cache", "");
-
         haxedefs.set("initial.state", "MainMenu");
     }
 }

@@ -3,6 +3,7 @@ Friday Night Funkin' Copyright 2020-2024 The Funkin' Crew Inc. All Rights Reserv
 You can view the `funkin-assets` and `infinite-funkin-assets` license here: (https://github.com/infinite-kemonoyagi-games/infinite-funkin-assets/blob/main/license.md)
 
 
+   ```
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -204,3 +205,4 @@ You can view the `funkin-assets` and `infinite-funkin-assets` license here: (htt
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+   ```

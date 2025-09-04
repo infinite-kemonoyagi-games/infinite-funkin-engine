@@ -16,6 +16,11 @@
       "version": "4.3.2"
     },
     {
+      "name": "hxcpp-debug-server",
+      "type": "haxelib",
+      "version": null
+    },
+    {
       "name": "hxdiscord_rpc",
       "type": "haxelib",
       "version": "1.3.0"
