@@ -16,9 +16,9 @@
 
 package funkin.menu;
 
-import flixel.FlxState;
+import funkin.backend.state.FunkinState;
 
-class MenuState extends FlxState 
+class MenuState extends FunkinState 
 {
     public function new() 
     {

@@ -16,11 +16,11 @@
 
 package funkin.visuals.text;
 
+import funkin.backend.visual.FunkinSprite;
 import funkin.assets.FunkinPaths;
 import funkin.utils.CoolUtils;
-import flixel.FlxSprite;
 
-class FunkinTextChar extends FlxSprite 
+class FunkinTextChar extends FunkinSprite 
 {
     public static inline final DEFAULT_CHAR:String = "A";
     public static inline final DEFAULT_PATH:String = "fonts/";

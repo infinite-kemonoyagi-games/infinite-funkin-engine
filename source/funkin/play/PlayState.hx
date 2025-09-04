@@ -16,10 +16,9 @@
 
 package funkin.play;
 
-import funkin.assets.FunkinPaths;
-import flixel.FlxState;
+import funkin.backend.state.FunkinState;
 
-class PlayState extends FlxState // temporal
+class PlayState extends FunkinState
 {
     public function new() 
     {
