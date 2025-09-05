@@ -11,15 +11,21 @@ import flixel.FlxSprite;
 
 class FunkinSprite extends FlxSprite 
 {
-    public var animationComplex(default, null):AnimationComplex = null;
+    public var animationComplex(default, null):FunkinAnimationComplex = null;
 
     public var assets(get, never):FunkinAssets;
     public var load(get, never):FunkinAssetsLoad;
 
     public function new() 
     {
-        animationComplex = new AnimationComplex(this);
+        animationComplex = new FunkinAnimationComplex(this);
         super();
+    }
+
+    public function loadSparrow(key:String, permanent:Bool = false):FunkinSprite 
+    {
+        this.frames = load.sparrowAtlas(key, permanent);
+        return this;
     }
 
     @:noCompletion
@@ -35,7 +41,7 @@ class FunkinSprite extends FlxSprite
     }    
 }
 
-class AnimationComplex
+class FunkinAnimationComplex
 {
     public var sprite:FunkinSprite = null;
 
@@ -57,12 +63,12 @@ class AnimationComplex
 	 * @param   flipX       Whether the frames should be flipped horizontally.
 	 * @param   flipY       Whether the frames should be flipped vertically.
 	 */
-	public function add(image:FlxGraphic, fWidth:Float, fHeight:Float, name:String, 
+	public function add(data:FunkinAnimatedGraphic, name:String, 
         frames:Array<Int>, framerate:Float = 30.0, looped = true, flipX = false, flipY = false):Void
 	{
         sprite.animation.add(name, frames, framerate, looped, flipX, flipY);
 
-        final tile = FlxTileFrames.fromGraphic(image, new FlxPoint(fWidth, fHeight));
+        final tile = FlxTileFrames.fromGraphic(data.graphic, new FlxPoint(data.width, data.height));
 
         if (!storedFrames.exists(tile)) storedFrames.set(tile, [name]);
         else storedFrames.get(tile).push(name);
@@ -144,5 +150,19 @@ class AnimationComplex
         if (centerOffsets) sprite.centerOffsets();
         if (offsets != null && offsets.exists(animName))
             sprite.offset.copyFrom(offsets.get(animName));
+    }
+}
+
+class FunkinAnimatedGraphic 
+{
+    public var graphic:FlxGraphic;
+    public var width:Int;
+    public var height:Int;
+
+    public function new(Graphic:FlxGraphic, Width:Int, Height:Int) 
+    {
+        graphic = Graphic;
+        width = Width;
+        height = Height;
     }
 }

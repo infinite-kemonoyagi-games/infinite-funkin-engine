@@ -32,13 +32,14 @@ class FunkinTextChar extends FunkinSprite
     public var directory:String = DEFAULT_PATH;
     public var lastCharacter:Null<FunkinTextChar> = null;
 
-    @:allow(funkin.visuals.FunkinText)
     private var originalFont:String = "";
-
     private var isTemplate:Bool = false;
     private var forceLowerCase:Bool = false;
 
     public var fileUrl:String;
+
+    public var originalPoints:Array<String> = null;
+    public var referencePoints:Array<String> = null;
 
     public function new(Character:String, Font:String, Size:Float, ?Row:Int = 0, ?LastCharacter:FunkinTextChar,
         ?Directory:String = FunkinTextChar.DEFAULT_PATH) 
@@ -51,20 +52,27 @@ class FunkinTextChar extends FunkinSprite
         ?Directory:String = FunkinTextChar.DEFAULT_PATH):FunkinTextChar 
     {
         this.character = Character;
+        this.font = Font;
         this.size = Size;
         this.row = Row;
         if (LastCharacter != null) this.lastCharacter = LastCharacter;
         this.directory = Directory;
 
+        fileUrl = FunkinPaths.images(directory + font);
+        final originalUrl = FunkinPaths.images(directory + originalFont);
+
+        if (originalFont != null && originalFont != "") 
+            originalPoints = load.file(originalUrl + '-reference.txt').split(" ");
+        referencePoints = load.file(fileUrl + '-reference.txt').split(" ");
+
         return this;
     }
 
-    public function loadFont(Font:String):Void
+    public function loadFont(?Font:String = null):Void
     {
-        this.font = Font;
+        if (Font != null) this.font = Font;
 
-        fileUrl = FunkinPaths.images(directory + "/" + font);
-        frames = Main.current.assets.load.sparrowAtlas(fileUrl, true);
+        loadSparrow(fileUrl, true);
 
         function addAnimByChar(character:String):Void
         {
@@ -74,7 +82,7 @@ class FunkinTextChar extends FunkinSprite
         }
         function detectCharacter(character:String) 
         {
-            if (CoolUtils.existsAnimation(fileUrl, animCharName(character)))
+            if (CoolUtils.existsAnimation(fileUrl + ".xml", FunkinTextChar.animCharName(character)))
             {
                 addAnimByChar(character);
             }
@@ -89,7 +97,7 @@ class FunkinTextChar extends FunkinSprite
             }
             else if (font == "default")
             {
-                animation.addByPrefix(character, '-question mark-', 24, true);
+                animation.addByPrefix(character, '-question mark-', 24, true); // ?
             }
         }
 
@@ -97,8 +105,12 @@ class FunkinTextChar extends FunkinSprite
         {
             detectCharacter(character);
         }
+    }
 
-        if (character != "") refreshChar();
+    public function loadSimple(?Font:String = null):Void
+    {
+        if (Font != null) this.font = Font;
+        loadSparrow(fileUrl, true);
     }
 
     public function refreshChar(?noExists:() -> Void):Void
@@ -110,9 +122,58 @@ class FunkinTextChar extends FunkinSprite
         }
 
         animation.play(character);
-		updateHitbox();
         scale.set(size, size);
         updateHitbox();
+
+        if (referencePoints != null)
+        {
+            if (originalPoints != null)
+            {
+                final oW:Float = Std.parseFloat(originalPoints[0]) * size;
+                final oH:Float = Std.parseFloat(originalPoints[1]) * size;
+                final rW:Float = Std.parseFloat(referencePoints[0]) * size;
+                final rH:Float = Std.parseFloat(referencePoints[1]) * size;
+                var centerX:Float = 0;
+                var centerY:Float = 0;
+
+                switch character 
+                {
+                    case "_" | "." | ",":
+                        if (character != "." || character != ",") 
+                            centerX = width - (rW - oW);
+
+                        centerY = height - (rH - oH);
+                    default:
+                        centerX = (width - ((rW - oW))) / 2;
+                        centerY = (height - ((rH - oH))) / 2;
+                }
+
+                offset.x += centerX;
+                offset.y += centerY;
+            }
+            else
+            {
+                final rW:Float = Std.parseFloat(referencePoints[0]) * size;
+                final rH:Float = Std.parseFloat(referencePoints[1]) * size;
+                var centerX:Float = 0;
+                var centerY:Float = 0;
+
+                switch character 
+                {
+                    case "_" | "." | ",":
+                        if (character != "." || character != ",") 
+                            centerX = width - rW;
+
+                        centerY = height - rH;
+                    default:
+                        centerX = (width - rW) / 2;
+                        centerY = (height - rH) / 2;
+                }
+
+                offset.x += centerX;
+                offset.y += centerY;
+            }
+        }
     }
 
     public static function animCharName(?char:String):String
@@ -140,5 +201,18 @@ class FunkinTextChar extends FunkinSprite
 
             default: char;
         };
+    }
+
+    public static function copyFrom(character:FunkinTextChar):FunkinTextChar
+    {
+        final text:FunkinTextChar = new FunkinTextChar(character.character, character.font, character.size, 
+            character.row, character.lastCharacter);
+        
+        text.font = character.font;
+        text.frames = character.frames;
+        text.animation.copyFrom(character.animation);
+        text.scale.set(character.size, character.size);
+
+        return text;
     }
 }

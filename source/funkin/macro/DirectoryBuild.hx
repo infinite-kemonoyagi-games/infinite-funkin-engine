@@ -61,12 +61,23 @@ final class DirectoryBuild
             if (file == dir) continue;
             try 
             {
-                final nFunc:Function = {
-                    args: [{name: "file", type: macro: String, opt: false, value: null}],
-                    ret: macro: String,
-                    expr: macro return funkin.macro.DirectoryBuild.BuildDirectoryPath.getPathFolder($v{'$dir/' + file}, file)
+                final argument:FunctionArg =
+                {
+                    name: "path", 
+                    type: macro: String, 
+                    opt: false, 
+                    value: null
                 };
-                final nField:Field = {
+
+                final nFunc:Function = 
+                {
+                    args: [argument],
+                    ret: macro: String,
+                    expr: macro return funkin.macro.DirectoryBuild.BuildDirectoryPath
+                          .getPathFolder($v{dir} + '/' + $v{file}, path)
+                };
+                final nField:Field = 
+                {
                     name: functionName,
                     kind: FFun(nFunc),
                     access: [APublic, AInline],
@@ -88,8 +99,8 @@ final class DirectoryBuild
 
 final class BuildDirectoryPath 
 {
-    public static inline function getPathFolder(dir:String, folder:String):String 
+    public static inline function getPathFolder(folder:String, file:String):String 
     {
-        return '$dir/$folder/';
+        return '$folder/$file';
     }
 }

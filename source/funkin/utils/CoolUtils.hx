@@ -18,10 +18,13 @@ final class CoolUtils
 
     public static function existsAnimation(xml:FlxXmlAsset, animation:String):Bool
     {
-		if (xml == null) return false;
+		if (xml == null || xml == "") return false;
 
 		var data:Access;
-        if (cachedXML.exists(xml)) data = cachedXML.get(xml);
+        if (cachedXML.exists(xml)) 
+        {
+            data = cachedXML.get(xml);
+        }
         else 
         {
             data = new Access(xml.getXml().firstElement());

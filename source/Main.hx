@@ -16,6 +16,8 @@
 
 package;
 
+import funkin.visuals.text.FunkinText;
+import funkin.menu.MenuState;
 import funkin.assets.FunkinAssets;
 import flixel.FlxG;
 import flixel.FlxGame;
@@ -64,7 +66,7 @@ class Main extends Sprite
 		}
 
 		#if (linux || mac)
-		Lib.current.stage.window.setIcon(Image.fromFile("assets/images/icon/iconOG.png"));
+		Lib.current.stage.window.setIcon(Image.fromFile(FunkinPaths.images("icon/iconOG.png")));
 		#end
 
 		/* 
@@ -73,10 +75,13 @@ class Main extends Sprite
 			initialize it at the end with 'FlxG.switchState' and 'game._initialState' (optional) 
 		*/
 		game = new FlxGame();
+		game.focusLostFramerate = Std.int(Lib.current.stage.frameRate / 2);
 		addChild(game);
 
 		FlxSprite.defaultAntialiasing = true;
 		assets = new FunkinAssets();
+
+		FunkinText.loadDefaultFont();
 
 		#if FLX_MOUSE
 		FlxG.mouse.visible = true;
@@ -86,8 +91,7 @@ class Main extends Sprite
 		FlxG.fixedTimestep = false;
 		FlxG.keys.preventDefaultKeys = [TAB];
 
-		game.focusLostFramerate = Std.int(Lib.current.stage.frameRate / 2);
-
+		changeInitialState(new MenuState());
 		FlxG.switchState(game._initialState);
 	}
 

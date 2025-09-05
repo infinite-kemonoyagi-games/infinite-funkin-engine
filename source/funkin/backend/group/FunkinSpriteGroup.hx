@@ -2,7 +2,7 @@ package funkin.backend.group;
 
 import funkin.assets.FunkinAssetsLoad;
 import funkin.assets.FunkinAssets;
-import funkin.backend.visual.FunkinSprite.AnimationComplex;
+import funkin.backend.visual.FunkinSprite.FunkinAnimationComplex;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 

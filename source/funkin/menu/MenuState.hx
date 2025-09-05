@@ -16,13 +16,24 @@
 
 package funkin.menu;
 
+import funkin.assets.FunkinPaths;
+import flixel.FlxSprite;
+import funkin.visuals.text.FunkinText;
 import funkin.backend.state.FunkinState;
 
 class MenuState extends FunkinState 
 {
+    var test:FunkinText = null;
+
     public function new() 
     {
         super();
+
+        var background:FlxSprite = new FlxSprite().loadGraphic(FunkinPaths.images("menu/menuDesat.png"));
+        add(background);
+
+        test = new FunkinText("Hello, \nthis is a test text. ☺", 0.45, "bold");
+        add(test);
     }
 
     public override function create():Void 
@@ -30,8 +41,14 @@ class MenuState extends FunkinState
         super.create();
     }
 
+    var timer:Float = 0.0;
+
     public override function update(elapsed:Float):Void 
     {
         super.update(elapsed);
+
+        timer += elapsed;
+
+        test.text = "Timer: " + Math.floor(timer);
     }
 }
