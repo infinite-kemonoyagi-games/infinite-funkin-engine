@@ -30,7 +30,7 @@ class Project extends HXProject
     static final TITLE:String = "Infinite Funkin' Engine | Friday Night Funkin'";
     static final FILE:String = "Funkin";
 
-    static final VERSION:String = "0.1.0";
+    static final VERSION:String = "0.2.0";
 
     static final PACKAGE_NAME:String = "com.infigames.funkin";
     static final COMPANY:String = "Infinite KemonoYagi Games";
