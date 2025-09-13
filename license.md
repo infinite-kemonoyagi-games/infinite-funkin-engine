@@ -1,7 +1,6 @@
 Friday Night Funkin' Copyright 2020-2024 The Funkin' Crew Inc. All Rights Reserved. "Friday Night Funkin'" and the "Friday Night Funkin'" logo are trademarks of The Funkin' Crew Inc.
 
-You can view the `funkin-assets` and `infinite-funkin-assets` license here: (https://github.com/infinite-kemonoyagi-games/infinite-funkin-assets/blob/main/license.md)
-
+You can view the `funkin-assets` and `infinite-funkin-assets` license here: (<https://github.com/infinite-kemonoyagi-games/infinite-funkin-assets/blob/main/license.md>)
 
    ```
                                  Apache License

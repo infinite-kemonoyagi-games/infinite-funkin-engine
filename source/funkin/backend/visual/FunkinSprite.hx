@@ -131,25 +131,25 @@ class FunkinAnimationComplex
 	 * @param   frame      The frame number in the animation you want to start from.
 	 *                     If a negative value is passed, a random frame is used.
 	 */
-    public function play(animName:String, force = false, centerOffsets:Bool = false, 
+    public function play(name:String, force = false, centerOffsets:Bool = false, 
         reversed = false, frame = 0):Void
     {
         for (frame => animations in storedFrames) 
         {
-            if (animations.contains(animName))
+            if (animations.contains(name))
             {
                 sprite.setFrames(frame, true);
                 break;
             }
         }
 
-        if (!sprite.animation.exists(animName)) return;
+        if (!sprite.animation.exists(name)) return;
 
-        sprite.animation.play(animName, force, reversed, frame);
+        sprite.animation.play(name, force, reversed, frame);
 
         if (centerOffsets) sprite.centerOffsets();
-        if (offsets != null && offsets.exists(animName))
-            sprite.offset.copyFrom(offsets.get(animName));
+        if (offsets != null && offsets.exists(name))
+            sprite.offset.copyFrom(offsets.get(name));
     }
 }
 

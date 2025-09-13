@@ -39,8 +39,6 @@ class FunkinText extends FunkinTypedSpriteGroup<FunkinTextChar>
         size = Size;
         font = Font;
         text = Text;
-
-        FlxPool;
     }
 
     public function setAdvancedText(Text:String, SpaceLength:Float = 1.0, RowSize:Float = 1.0):Void 
@@ -102,7 +100,12 @@ class FunkinText extends FunkinTypedSpriteGroup<FunkinTextChar>
                 }
                 else
                 {
-                    if (lastCharacter != null) posX = lastCharacter.x + (templates.get(font).width * size);
+                    final offX:Float = lastCharacter?.offset.x ?? 0;
+
+                    if (lastCharacter != null)
+                    {
+                        posX = lastCharacter.x + offX + (lastCharacter.width * size);
+                    }
 
                     posX += (40 * spaces) * size;
                     posX *= spaceLength;
