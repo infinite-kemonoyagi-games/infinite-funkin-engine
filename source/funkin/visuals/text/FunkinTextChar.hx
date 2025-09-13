@@ -129,52 +129,37 @@ class FunkinTextChar extends FunkinSprite
         {
             if (originalPoints != null)
             {
-                // final oW:Float = Std.parseFloat(originalPoints[0]) * size;
                 final oH:Float = Std.parseFloat(originalPoints[1]) * size;
-                // final rW:Float = Std.parseFloat(referencePoints[0]) * size;
                 final rH:Float = Std.parseFloat(referencePoints[1]) * size;
-                // var centerX:Float = 0;
                 var centerY:Float = 0;
 
                 switch character 
                 {
                     case "_" | "." | ",":
-                        /*if (character != "." || character != ",") 
-                            centerX = width - (rW - oW);*/
-
                         centerY = height - (rH - oH);
                     case "\'" | "\"":
                         // do nothing
                     default:
-                        // centerX = (width - ((rW - oW))) / 2;
                         centerY = (height - ((rH - oH))) / 2;
                 }
 
-                // offset.x += centerX;
                 offset.y += centerY;
             }
             else
             {
-                // final rW:Float = Std.parseFloat(referencePoints[0]) * size;
                 final rH:Float = Std.parseFloat(referencePoints[1]) * size;
-                // var centerX:Float = 0;
                 var centerY:Float = 0;
 
                 switch character 
                 {
                     case "_" | "." | ",":
-                        /*if (character != "." || character != ",") 
-                            centerX = width - rW;*/
-
                         centerY = height - rH;
                     case "\'" | "\"":
                         // do nothing
                     default:
-                        // centerX = (width - rW) / 2;
                         centerY = (height - rH) / 2;
                 }
 
-                // offset.x += centerX;
                 offset.y += centerY;
             }
         }
