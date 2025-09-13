@@ -77,11 +77,7 @@ class MenuItem<T:FlxSprite> extends FlxBasic
         onPressed = new FlxTypedSignal();
         justPressed = new FlxTypedSignal();
 
-        #if (haxe >= "4.0.0")
         animNames = [];
-        #else
-        animNames = new Map<MenuItemState, MenuItemAnimation>();
-        #end
 
         positionData = MenuItemPositionData.defaultAnim;
     }

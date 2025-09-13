@@ -31,15 +31,9 @@ class FunkinAssetsMemory
 
     public function new() 
     {
-        #if (haxe >= "4.0.0")
         storedImages = [];
         storedAudios = [];
         storedFiles = [];
-        #else
-        storedImages = new Map<String, Graphic>();
-        storedAudios = new Map<String, Sound>();
-        storedFiles  = new Map<String, String>();
-        #end
 
         permanentImages = [];
         permanentAudios = [];
