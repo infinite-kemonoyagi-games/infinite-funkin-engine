@@ -54,7 +54,13 @@ class FunkinSprite extends FlxSprite
     private inline function get_load():FunkinAssetsLoad
     {
         return assets.load;
-    }    
+    }
+
+    public function updateOnlyHitbox() 
+    {
+        width = Math.abs(scale.x) * frameWidth;
+		height = Math.abs(scale.y) * frameHeight;
+    }
 }
 
 class FunkinAnimationComplex
