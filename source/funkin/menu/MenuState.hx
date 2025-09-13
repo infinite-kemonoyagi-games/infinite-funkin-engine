@@ -37,8 +37,8 @@ typedef MenuData =
 
 class MenuState extends FunkinState 
 {
-    private static var selectID:Int = 0;
-    private static var selectItem:MenuData = null;
+    private static var curSelected:Int = 0;
+    private static var curData:MenuData = null;
 
     public var optionsList:Array<MenuData> = [
         {name: "storymode", state: null},
@@ -104,7 +104,7 @@ class MenuState extends FunkinState
 
             item.justSelected.add(function(item:MenuItem<FunkinSprite>)
             {
-                selectItem = optionsList[item.ID];
+                curData = optionsList[item.ID];
             });
 
             item.changeState(MenuItemState.idle, true);
@@ -150,8 +150,8 @@ class MenuState extends FunkinState
 
     private function changeSelector(sel:Int = 0, ?playSound:Bool = true):Void
     {
-        selectID += sel;
-        selectID = MathUtils.boundLoop(selectID, 0, optionsList.length - 1);
+        curSelected += sel;
+        curSelected = MathUtils.boundLoop(curSelected, 0, optionsList.length - 1);
 
         updateItems(playSound);
     }
@@ -162,7 +162,7 @@ class MenuState extends FunkinState
         {
             item.changeState(MenuItemState.idle);
 
-            if (item.ID == selectID) 
+            if (item.ID == curSelected) 
             {
                 item.changeState(MenuItemState.selected);
                 item.sprite.centerOffsets();
