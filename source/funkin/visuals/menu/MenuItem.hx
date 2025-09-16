@@ -58,7 +58,7 @@ class MenuItem<T:FlxSprite> extends FlxBasic
     public var target:Float = 0.0;
     public var speed:Float = 6.5;
 
-    public var positionData(default, null):(item:MenuItem<T>, range:Float) -> Void;
+    public var positionData:(item:T, target:Float, range:Float) -> Void;
     public var animatePosition:Bool = false;
 
     public function new(sprite:T)
@@ -109,7 +109,7 @@ class MenuItem<T:FlxSprite> extends FlxBasic
         var range:Float = elapsed * speed;
         if (instant) range = 1;
 
-        positionData(this, range);
+        positionData(sprite, target, range);
     }
 
     public function addAnimation(state:MenuItemState, func:(sprite:T) -> MenuItemAnimation) 
@@ -208,18 +208,18 @@ class MenuItemPositionData
     /**
      * item.animationData = defaultAnim;
      */
-    public static function defaultAnim<T:FlxSprite>(item:MenuItem<T>, range:Float):Void
+    public static function defaultAnim<T:FlxSprite>(sprite:T, target:Float, range:Float):Void
     {
-        final scaledY = FlxMath.remapToRange(item.target, 0, 1, 0, 1.3);
-        item.sprite.y = FlxMath.lerp(item.sprite.y, (scaledY * 120) + (FlxG.height * 0.48), range);
-        item.sprite.x = FlxMath.lerp(item.sprite.x, (item.target * 20) + 90, range);
+        final scaledY = FlxMath.remapToRange(target, 0, 1, 0, 1.3);
+        sprite.y = FlxMath.lerp(sprite.y, (scaledY * 120) + (FlxG.height * 0.48), range);
+        sprite.x = FlxMath.lerp(sprite.x, (target * 20) + 90, range);
     }
     /**
      * item.animationData = onlyYAnim;
      */
-    public static function onlyYAnim<T:FlxSprite>(item:MenuItem<T>, range:Float):Void
+    public static function onlyYAnim<T:FlxSprite>(sprite:T, target:Float, range:Float):Void
     {
-        final scaledY = FlxMath.remapToRange(item.target, 0, 1, 0, 1.3);
-        item.sprite.y = FlxMath.lerp(item.sprite.y, (scaledY * 120) + (FlxG.height * 0.48), range);
+        final scaledY = FlxMath.remapToRange(target, 0, 1, 0, 1.3);
+        sprite.y = FlxMath.lerp(sprite.y, (scaledY * 120) + (FlxG.height * 0.48), range);
     }
 }
