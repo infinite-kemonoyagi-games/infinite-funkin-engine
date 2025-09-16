@@ -120,7 +120,7 @@ class MenuState extends FunkinState
             item.sprite.y += (finalHeight * (item.ID / length)) - mult;
         }
 
-        infoText = new FunkinText("Friday Night Funkin\' Infinite Engine | Version: 0.1.0 ♡", 0.35, "bold");
+        infoText = new FunkinText("Friday Night Funkin\' Infinite Engine | Version: 0.1.0 ♡", 0.35, 0.35, "bold");
         infoText.y = FlxG.height - infoText.height;
         add(infoText);
 

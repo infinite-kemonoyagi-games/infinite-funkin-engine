@@ -16,6 +16,8 @@
 
 package funkin.visuals.text;
 
+import flixel.util.FlxPool;
+import flixel.math.FlxPoint;
 import funkin.backend.visual.FunkinSprite;
 import funkin.assets.FunkinPaths;
 import funkin.utils.CoolUtils;
@@ -25,12 +27,16 @@ class FunkinTextChar extends FunkinSprite
     public static inline final DEFAULT_CHAR:String = "A";
     public static inline final DEFAULT_PATH:String = "fonts/";
 
+    public var parent:FunkinText = null;
+
     public var character:String;
     public var font:String;
-    public var size:Float;
+    public var size:FlxPoint;
     public var row:Int;
     public var directory:String = DEFAULT_PATH;
-    public var lastCharacter:Null<FunkinTextChar> = null;
+    public var lastCharacter(default, null):Null<FunkinTextChar> = null;
+    public var lastSpaces:Float = 0.0;
+    public var lastRows:Float = 0.0;
 
     private var originalFont:String = "";
     private var isTemplate:Bool = false;
@@ -41,22 +47,32 @@ class FunkinTextChar extends FunkinSprite
     public var originalPoints:Array<String> = null;
     public var referencePoints:Array<String> = null;
 
-    public function new(Character:String, Font:String, Size:Float, ?Row:Int = 0, ?LastCharacter:FunkinTextChar,
-        ?Directory:String = FunkinTextChar.DEFAULT_PATH) 
+    public var position:FlxPoint = null;
+    public var globalPosition(default, null):FlxPoint = null;
+    public var charOffset(default, null):FlxPoint = null;
+
+    private var _skipUpdatePosition:Bool = false;
+
+    public function new() 
     {
         super();
-        setData(Character, Font, Size, Row, LastCharacter, Directory);
     }
 
-    public function setData(Character:String, Font:String, Size:Float, ?Row:Int = 0, ?LastCharacter:FunkinTextChar,
+    public function setData(Character:String, Font:String, Width:Float = 1.0, Height:Float = 1.0, ?Row:Int = 0, ?LastCharacter:FunkinTextChar,
         ?Directory:String = FunkinTextChar.DEFAULT_PATH):FunkinTextChar 
     {
+        _skipUpdatePosition = true;
+
         this.character = Character;
         this.font = Font;
-        this.size = Size;
+        this.size = new FlxCallbackPoint(_ -> updatePosition());
+        this.size.set(Width, Height);
         this.row = Row;
         if (LastCharacter != null) this.lastCharacter = LastCharacter;
         this.directory = Directory;
+        this.position = new FlxCallbackPoint(_ -> updatePosition());
+        this.globalPosition = new FlxPoint();
+        this.charOffset = new FlxPoint();
 
         fileUrl = FunkinPaths.images(directory + font);
         final originalUrl = FunkinPaths.images(directory + originalFont);
@@ -64,6 +80,8 @@ class FunkinTextChar extends FunkinSprite
         if (originalFont != null && originalFont != "") 
             originalPoints = load.file(originalUrl + '-reference.txt').split(" ");
         referencePoints = load.file(fileUrl + '-reference.txt').split(" ");
+
+        _skipUpdatePosition = false;
 
         return this;
     }
@@ -122,47 +140,89 @@ class FunkinTextChar extends FunkinSprite
         }
 
         animation.play(character);
-        scale.set(size, size);
+        scale.set(size.x, size.y);
         updateHitbox();
 
+        function setOffset(isNotOriginal:Bool = false):Void
+        {
+            var oH:Float = 0.0;
+            if (isNotOriginal)
+            {
+                oH = Std.parseFloat(originalPoints[1]) * size.y;
+            }
+            final rH:Float = Std.parseFloat(referencePoints[1]) * size.y;
+            final centerY:Float = switch character 
+            {
+                case "_" | "." | ",": height - (rH - oH);
+                case "\'" | "\"": 0;
+                default: (height - (rH - oH)) / 2;
+            };
+
+            charOffset.y += centerY;
+        }
         if (referencePoints != null)
         {
-            if (originalPoints != null)
-            {
-                final oH:Float = Std.parseFloat(originalPoints[1]) * size;
-                final rH:Float = Std.parseFloat(referencePoints[1]) * size;
-                var centerY:Float = 0;
-
-                switch character 
-                {
-                    case "_" | "." | ",":
-                        centerY = height - (rH - oH);
-                    case "\'" | "\"":
-                        // do nothing
-                    default:
-                        centerY = (height - ((rH - oH))) / 2;
-                }
-
-                offset.y += centerY;
-            }
-            else
-            {
-                final rH:Float = Std.parseFloat(referencePoints[1]) * size;
-                var centerY:Float = 0;
-
-                switch character 
-                {
-                    case "_" | "." | ",":
-                        centerY = height - rH;
-                    case "\'" | "\"":
-                        // do nothing
-                    default:
-                        centerY = (height - rH) / 2;
-                }
-
-                offset.y += centerY;
-            }
+            setOffset(originalPoints != null);
         }
+    }
+
+    private function setFontOrigin(x:Float, y:Float):Void
+    {
+        position.set(x, y);
+    }
+
+    private function setFontSize(x:Float, y:Float):Void
+    {
+        size.set(x, y);
+    }
+
+    @:allow(funkin.visuals.text.FunkinText)
+    private function updatePosition():Void
+    {
+        if (_skipUpdatePosition || parent == null)
+        {
+            return;
+        }
+        final template:FunkinTextChar = FunkinText.templates.get(font);
+
+        var posX:Float = 0.0;
+        if (lastCharacter != null)
+        {
+            posX = lastCharacter.globalPosition.x + lastCharacter.width;
+        }
+        posX += (40 * lastSpaces) * size.x;
+        posX *= parent.spaceLength;
+        var posY:Float = 0.0;
+        if (lastRows > 0)
+        {
+            if (lastCharacter != null && template != null)
+            {
+                posY = lastCharacter.globalPosition.y + template.height;
+            }
+            posY += (35 * lastRows) * size.y;
+            posY *= parent.rowSize;
+        }
+        globalPosition.set(posX, posY);
+
+        final relX = (position.x + posX) * parent.scale.x;
+        final relY = (position.y + posY) * parent.scale.y;
+        final cX = (parent.width  * parent.scale.x) / 2;
+        final cY = (parent.height * parent.scale.y) / 2;
+        // final cx = parent.origin.x;
+        // final cy = parent.origin.y;
+        final r = parent.angle * Math.PI / 180;
+        final dX = relX - cX;
+        final dY = relY - cY;
+        final aX = cX + dX * Math.cos(r) - dY * Math.sin(r);
+        final aY = cY + dX * Math.sin(r) + dY * Math.cos(r);
+        final oX = charOffset.x * parent.scale.x;
+        final oY = charOffset.y * parent.scale.y;
+
+        scale.set(size.x * parent.scale.x, size.y * parent.scale.y);
+        updateOnlyHitbox();
+        angle = parent.individualAngle + parent.angle;
+        x = parent.x + aX - oX;
+        y = parent.y + aY - oY;
     }
 
     public static function animCharName(?char:String):String
@@ -192,16 +252,23 @@ class FunkinTextChar extends FunkinSprite
         };
     }
 
-    public static function copyFrom(character:FunkinTextChar):FunkinTextChar
+    public static function cloneFrom(character:FunkinTextChar):FunkinTextChar
     {
-        final text:FunkinTextChar = new FunkinTextChar(character.character, character.font, character.size, 
-            character.row, character.lastCharacter);
-        
-        text.font = character.font;
-        text.frames = character.frames;
-        text.animation.copyFrom(character.animation);
-        text.scale.set(character.size, character.size);
-
+        final text:FunkinTextChar = new FunkinTextChar();
+        text.copyFrom(character);
         return text;
+    }
+
+    public function copyFrom(character:FunkinTextChar):FunkinTextChar
+    {
+        setData(character.character, character.font, character.size.x, character.size.y, 
+            character.row, character.lastCharacter);
+        frames = character.frames;
+        _skipUpdatePosition = true;
+        position.copyFrom(character.position);
+        animation.copyFrom(character.animation);
+        scale.copyFrom(character.size);
+        _skipUpdatePosition = false;
+        return this;
     }
 }
