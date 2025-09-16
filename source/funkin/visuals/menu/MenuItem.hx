@@ -16,7 +16,6 @@
 
 package funkin.visuals.menu;
 
-import flixel.FlxCamera;
 import flixel.FlxBasic;
 import flixel.math.FlxMath;
 import flixel.FlxG;
@@ -86,12 +85,20 @@ class MenuItem<T:FlxSprite> extends FlxBasic
     {
         super.draw();
         sprite.draw();
+
+        #if FLX_DEBUG
+        ++FlxBasic.visibleCount;
+        #end
     }
 
     public override function update(elapsed:Float):Void
     {
         super.update(elapsed);
         sprite.update(elapsed);
+
+        #if FLX_DEBUG
+        ++FlxBasic.activeCount;
+        #end
 
         if (animatePosition) setPositionMenu(elapsed, false);
     }
