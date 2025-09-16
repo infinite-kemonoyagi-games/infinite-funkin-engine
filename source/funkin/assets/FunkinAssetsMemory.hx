@@ -50,7 +50,7 @@ class FunkinAssetsMemory
 
         if (graphic != null)
         {
-            #if INFINITE_CACHE
+            #if infinite.cache
             graphic.persist = true;
             if (permanent != null && permanent) permanentImages.push(dir);
             #end
@@ -73,11 +73,11 @@ class FunkinAssetsMemory
             return storedAudios.get(dir);
 
         final OFLAssets = openfl.utils.Assets;
-        final sound:Null<Sound> = OFLAssets.getSound(dir, #if INFINITE_CACHE permanent #else false #end);
+        final sound:Null<Sound> = OFLAssets.getSound(dir, #if infinite.cache permanent #else false #end);
 
         if (sound != null)
         {
-            #if INFINITE_CACHE
+            #if infinite.cache
             if (permanent != null && permanent) permanentAudios.push(dir);
             #end
 
@@ -103,7 +103,7 @@ class FunkinAssetsMemory
 
         if (file != null)
         {
-            #if INFINITE_CACHE
+            #if infinite.cache
             if (permanent != null && permanent) permanentFiles.push(dir);
             #end
 
