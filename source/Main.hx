@@ -16,6 +16,7 @@
 
 package;
 
+import flixel.util.typeLimit.NextState;
 import funkin.visuals.text.FunkinText;
 import funkin.menu.MenuState;
 import funkin.assets.FunkinAssets;
@@ -41,6 +42,8 @@ class Main extends Sprite
 	public var game(default, null):FlxGame = null;
 	public var assets(default, null):FunkinAssets = null;
 
+	public var initialState(get, set):Null<NextState>;
+
 	public static function main():Void
 	{
 		Lib.current.addChild(current = new Main());
@@ -50,12 +53,14 @@ class Main extends Sprite
 	{
 		super();
 
-		// avoid Lib.current.stage "Null object reference" Error
-		if (stage != null)
+		if (stage != null) // avoid Lib.current.stage "Null object reference" Error
 		{
 			init();
 		}
-		else addEventListener(Event.ADDED_TO_STAGE, init);
+		else 
+		{
+			addEventListener(Event.ADDED_TO_STAGE, init);
+		}
 	}
 
 	public function init(?_):Void
@@ -66,7 +71,8 @@ class Main extends Sprite
 		}
 
 		#if (linux || mac)
-		Lib.current.stage.window.setIcon(Image.fromFile(FunkinPaths.images("icon/iconOG.png")));
+		final path:String = FunkinPaths.images("icon/iconOG.png");
+		Lib.current.stage.window.setIcon(Image.fromFile(path));
 		#end
 
 		/* 
@@ -92,14 +98,42 @@ class Main extends Sprite
 		FlxG.keys.preventDefaultKeys = [TAB];
 
 		changeInitialState(new MenuState());
-		FlxG.switchState(game._initialState);
+		switchStateFromInstance(initialState);
 	}
 
 	public function changeInitialState(newState:FlxState):Void
 	{
-		if (game != null) 
+		initialState = () -> newState;
+	}
+
+	public static function switchState(nextState:FlxState, skipClearMemory:Bool = false):Void
+	{
+		switchStateFromInstance(() -> nextState);
+	}
+
+	public static function switchStateFromInstance(nextState:NextState, skipClearMemory:Bool = false):Void
+	{
+		FlxG.switchState(nextState);
+
+		if (!skipClearMemory)
 		{
-			game._initialState = () -> newState;
+			current.assets.memory.clear();
 		}
+	}
+
+	@:noCompletion
+	private inline function get_initialState():NextState 
+	{
+		return game?._initialState;
+	}
+
+	@:noCompletion
+	private inline function set_initialState(value:NextState):NextState 
+	{
+		if (game != null)
+		{
+			return game._initialState = value;
+		}
+		return null;
 	}
 }

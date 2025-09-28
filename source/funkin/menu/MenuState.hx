@@ -49,7 +49,7 @@ class MenuState extends FunkinState
 
     public var background:FlxSprite = null;
     public var bgColorScheme:Map<String, FlxColor> = [
-        "unselected" => 0xFFFFE574,
+        "idle" => 0xFFFFE574,
         "selected" => 0xFFF1497C,
     ];
 
@@ -70,7 +70,7 @@ class MenuState extends FunkinState
 
         background = new FlxSprite();
         background.loadGraphic(load.image(FunkinPaths.images("menu/menuDesat.png"), true));
-        background.color = bgColorScheme.get("unselected");
+        background.color = bgColorScheme.get("idle");
         add(background);
 
         optionsGrp = new FunkinTypedGroup();
