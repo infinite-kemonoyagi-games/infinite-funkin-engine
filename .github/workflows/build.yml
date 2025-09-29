@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           haxelib install hmm
-          hmm install
+          haxelib run hmm install
 
       - name: Build (Linux)
         run: haxelib run lime build linux -release
