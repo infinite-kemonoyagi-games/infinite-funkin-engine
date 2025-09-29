@@ -34,7 +34,7 @@ jobs:
           haxe-version: "4.3.3"
 
       - name: Create a new haxelib repository
-        runs: haxelib newrepo
+        run: haxelib newrepo
 
       - name: Get haxelib's cache
         uses: actions/cache@v4
