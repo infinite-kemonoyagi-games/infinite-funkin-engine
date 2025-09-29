@@ -21,6 +21,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
 
       - name: Set up Haxe
         uses: krdlab/setup-haxe@v1
