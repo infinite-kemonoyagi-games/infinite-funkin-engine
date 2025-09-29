@@ -8,11 +8,13 @@ on:
     - "source/**"
     - "assets/**"
     - "project.hxp"
+    - ".github/workflows/build.yml"
   pull_request:
     paths:
       - "source/**"
       - "assets/**"
       - "project.hxp"
+      - ".github/workflows/build.yml"
 
 jobs:
   build:
