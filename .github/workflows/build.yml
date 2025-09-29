@@ -1,0 +1,28 @@
+name: Build nightly game builds
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Haxe
+        uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: "4.3.3"
+
+      - name: Install dependencies
+        run: |
+          haxelib install hmm
+          hmm install
+
+      - name: Build (Linux)
+        run: haxelib run lime build linux -release
