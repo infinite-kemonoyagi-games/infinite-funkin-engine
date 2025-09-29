@@ -16,6 +16,7 @@
 
 package funkin.menu;
 
+import openfl.Lib;
 import funkin.backend.visual.FunkinSprite;
 import funkin.utils.MathUtils;
 import flixel.FlxG;
@@ -120,7 +121,10 @@ class MenuState extends FunkinState
             item.sprite.y += (finalHeight * (item.ID / length)) - mult;
         }
 
-        infoText = new FunkinText("Friday Night Funkin\' Infinite Engine | Version: 0.1.0 ♡", 0.35, 0.35, "bold");
+        final title = Lib.application.meta["title"];
+        final version = Lib.application.meta["version"];
+
+        infoText = new FunkinText('$title | Version: $version', 0.35, 0.35, "bold");
         infoText.y = FlxG.height - infoText.height;
         add(infoText);
 
