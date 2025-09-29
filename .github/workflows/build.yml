@@ -56,4 +56,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-build
-          path: export/release/linux/bin/**/*
+          path: builds/release/linux/bin/**/*
