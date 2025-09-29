@@ -4,7 +4,15 @@ on:
   push:
     branches:
       - master
+    paths:
+    - "source/**"
+    - "assets/**"
+    - "project.hxp"
   pull_request:
+    paths:
+      - "source/**"
+      - "assets/**"
+      - "project.hxp"
 
 jobs:
   build:
