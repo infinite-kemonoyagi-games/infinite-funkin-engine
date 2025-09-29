@@ -92,7 +92,6 @@ class Project extends HXProject
 
         haxelibs.push(new Haxelib("hxdiscord_rpc"));
         haxelibs.push(new Haxelib("hscript"));
-        haxelibs.push(new Haxelib("hxopus"));
 
         if (platformType == DESKTOP)
         {
