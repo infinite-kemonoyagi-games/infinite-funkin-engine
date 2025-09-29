@@ -76,9 +76,9 @@ class Main extends Sprite
 		#end
 
 		/* 
-			i don't recommend to set the initial state (not in the constructor).
-			if you want to initialize some of your game's stuff before of state initialize
-			initialize it at the end with 'FlxG.switchState' and 'game._initialState' (optional) 
+		i don't recommend to set the initial state (not in the constructor).
+		if you want to initialize some of your game's stuff before of state initialize
+		initialize it at the end with 'FlxG.switchState' and 'game._initialState' (optional) 
 		*/
 		game = new FlxGame();
 		game.focusLostFramerate = Std.int(Lib.current.stage.frameRate / 2);
