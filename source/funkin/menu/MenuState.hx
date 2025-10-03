@@ -43,7 +43,7 @@ class MenuState extends FunkinState
 
     public var optionsList:Array<MenuData> = [
         {name: "storymode", state: null},
-        {name: "freeplay", state: null},
+        {name: "freeplay", state: new FreeplayState()},
         {name: "options", state: null},
         {name: "credits", state: null}
     ];
