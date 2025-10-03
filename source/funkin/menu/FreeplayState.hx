@@ -1,5 +1,6 @@
-package funkin.menu.freeplay;
+package funkin.menu;
 
+import funkin.assets.FunkinPaths;
 import funkin.backend.group.FunkinGroup.FunkinTypedGroup;
 import funkin.visuals.menu.MenuItem;
 import funkin.visuals.FunkinIcon;
@@ -11,25 +12,67 @@ import flixel.util.FlxColor;
 
 class FreeplayState extends FunkinState
 {
-    public var list:FreeplayList = null;
+    private static var curSelected:Int = 0;
+    private static var curItem:FreeplayGroup = null;
 
-    public override function create() 
+    private static var curDifficultyName:String = "normal";
+    private static var curDifficultyID:Int = 0;
+
+    public var list:FreeplayList = null;
+    public var background:FlxSprite = null;
+
+    public function new()
+    {
+        super();
+    }
+
+    public override function create():Void
     {
         super.create();
 
         list = new FreeplayList(this);
+
+        background = new FlxSprite();
+        background.loadGraphic(load.image(FunkinPaths.images("menu/menuDesat.png"), true));
+        add(background);
+
+        addSong(function(data):Void
+        {
+            data.name = "Bopeebo";
+            data.icon = "dad";
+            data.color = FlxColor.fromRGB(146, 113, 253, 255);
+            data.song = "bopeebo";
+        });
+    }
+
+    private function addSong(listener:(data:FreeplayData) -> Void):Void 
+    {
+        final data = new FreeplayData();
+        listener(data);
+        list.add(data);
     }
 }
 
-typedef FreeplayData = 
+class FreeplayData 
 {
-    var name:String;
-    var icon:String;
-    var color:FlxColor;
-    var song:String;
-    var author:String;
-    var difficulties:Array<String>;
-    var rate:Int;
+    public var name:String;
+    public var icon:String;
+    public var color:FlxColor;
+    public var song:String;
+    public var author:String;
+    public var difficulties:Array<String>;
+    public var rate:Int;
+
+    public function new() 
+    {
+        name = "template song";
+        icon = "default-face";
+        color = 0xFFFFFFFF;
+        song = "template-song";
+        author = "unknown";
+        difficulties = ["easy", "normal", "hard"];
+        rate = 0;
+    }
 }
 
 class FreeplayList
@@ -58,6 +101,11 @@ class FreeplayList
     public inline function get(index:Int):FreeplayData
     {
         return list[index];
+    }
+
+    public inline function getGroup(index:Int):FreeplayGroup
+    {
+        return group.members[index];
     }
 
     public inline function set(index:Int, data:FreeplayData):FreeplayData
